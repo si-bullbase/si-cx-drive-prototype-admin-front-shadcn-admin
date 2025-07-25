@@ -5,12 +5,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
 import { Overview } from './components/overview'
 import { SimplePieChart } from './components/piechart'
 import { StackedBarChart } from './components/stacked-bar-chart'
@@ -23,16 +18,6 @@ import { SnsSuggestRankingCard } from './components/sns-suggest-ranking'
 export default function Dashboard() {
   return (
     <>
-      {/* ===== Top Heading ===== */}
-      <Header>
-        <TopNav links={topNav} />
-        <div className='ml-auto flex items-center space-x-4'>
-          <Search />
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
       {/* ===== Main ===== */}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
@@ -42,7 +27,7 @@ export default function Dashboard() {
         <Tabs
           orientation='vertical'
           defaultValue='overview'
-          className='space-y-4'
+          className=''
         >
           {/* SNSサジェストランキング */}
           <TabsContent value='overview' className='space-y-4'>
@@ -184,8 +169,7 @@ export default function Dashboard() {
               </Card>
             </div>
 
-
-              {/* */}
+              {/* ブース×職種クロス分析 */}
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-1'>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
@@ -203,30 +187,3 @@ export default function Dashboard() {
     </>
   )
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-]

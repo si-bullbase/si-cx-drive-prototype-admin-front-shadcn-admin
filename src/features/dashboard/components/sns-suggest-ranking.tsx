@@ -30,7 +30,7 @@ export function SnsSuggestRankingCard() {
     <Card className="w-full  mx-auto">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="flex items-center space-x-2">
-          <span className="bg-green-100 rounded-full px-2 py-1 text-xs font-bold text-green-700">LINE</span>
+          <img src="/images/LINE.svg" alt="LINE" width="24" />
           <CardTitle className="text-base font-bold">サジェストランキング</CardTitle>
         </div>
         <span className="text-xs text-gray-400">00:00 更新</span>

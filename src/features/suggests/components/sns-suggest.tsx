@@ -67,19 +67,15 @@ export function SnsSuggest() {
             {/* SNSアイコン */}
             <div className="flex justify-center">
               {/* 例: LINEアイコン */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48" fill="none">
-                <rect width="48" height="48" rx="12" fill="#06C755"/>
-                <path d="M24 13C16.268 13 10 17.9249 10 24.0132C10 28.2342 13.0572 31.6707 17.3932 33.2732C17.0732 34.4632 16.2732 37.3632 16.1932 37.7132C16.0732 38.2132 16.3932 38.2132 16.5932 38.1632C16.8132 38.1132 20.3932 35.7132 21.5932 34.9132C22.3732 34.9932 23.1768 35.0264 24 35.0264C31.732 35.0264 38 30.1015 38 24.0132C38 17.9249 31.732 13 24 13Z" fill="white"/>
-                <path d="M18.5 25.5C18.5 25.7761 18.2761 26 18 26C17.7239 26 17.5 25.7761 17.5 25.5V22.5C17.5 22.2239 17.7239 22 18 22C18.2761 22 18.5 22.2239 18.5 22.5V25.5ZM22.5 25.5C22.5 25.7761 22.2761 26 22 26C21.7239 26 21.5 25.7761 21.5 25.5V22.5C21.5 22.2239 21.7239 22 22 22C22.2761 22 22.5 22.2239 22.5 22.5V25.5ZM26.5 25.5C26.5 25.7761 26.2761 26 26 26C25.7239 26 25.5 25.7761 25.5 25.5V22.5C25.5 22.2239 25.7239 22 26 22C26.2761 22 26.5 22.2239 26.5 22.5V25.5ZM30.5 25.5C30.5 25.7761 30.2761 26 30 26C29.7239 26 29.5 25.7761 29.5 25.5V22.5C29.5 22.2239 29.7239 22 30 22C30.2761 22 30.5 22.2239 30.5 22.5V25.5Z" fill="#06C755"/>
-              </svg>
+              <img src="/images/LINE.svg" alt="LINE" width="24" />
             </div>
             {/* 投稿内容・キーワード */}
             <div>
               <div className="line-clamp-2">展示会で注目の生成AIツール「CXDrive」！来場者の皆様からの熱い質問が続々と...「ROIはどのくらい改善できる？」「導入までの期間は？」</div>
               <div className="flex gap-1 mt-1">
                 {/* ラベル */}
-                <span className="bg-green-100 text-green-800 rounded px-2 text-s">生成人工知能</span>
-                <span className="bg-blue-100 text-blue-800 rounded px-2 text-s">ファッション</span>
+                <span className="bg-primary rounded px-2 py-0.5 text-s">生成AI</span>
+                <span className="bg-primary rounded px-2 py-0.5 text-s">ファッション</span>
               </div>
             </div>
             {/* ターゲット */}
@@ -89,9 +85,9 @@ export function SnsSuggest() {
             {/* 予測エンゲージメント */}
             <div>
               <ul className="pl-2 space-y-1">
-                <li className="py-0.5">・エンゲージメント率 5.4%</li>
-                <li className="py-0.5">・インプレッション数 5,000</li>
-                <li className="py-0.5">・配信対象数 120</li>
+                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>エンゲージメント率 5.4%</li>
+                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>インプレッション数 5,000</li>
+                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>配信対象数 120</li>
               </ul>
             </div>
             {/* アクション */}
