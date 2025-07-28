@@ -1,0 +1,167 @@
+name: デプロイ
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "環境を選択してください。"
+        required: true
+        type: environment
+
+run-name: デプロイ ---> ${{ github.event.inputs.environment }}
+
+env:
+  ECS_TASK_DEFINITION_PATH: ${{ vars.ECS_TASK_DEFINITION_PATH }}
+  ECS_CONTAINER_NAME: ${{ vars.ECS_CONTAINER_NAME }}
+  ECS_CLUSTER_NAME: ${{ vars.ECS_CLUSTER_NAME }}
+  ECS_SERVICE_NAME: ${{ vars.ECS_SERVICE_NAME }}
+  ECS_REPOSITORY_NAME: ${{ vars.ECS_REPOSITORY_NAME }}
+
+  DOCKER_FILE: Dockerfile
+  DOCKER_BUILD_TARGET: ${{ github.event.inputs.environment }}
+  DOCKER_PLATFORM: linux/amd64
+
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  SLACK_WEBHOOK_URL: ${{ vars.SLACK_WEBHOOK_URL }}
+  SLACK_ICON: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+  SLACK_USERNAME: "Github Actions"
+  SLACK_SUCCESS_MESSAGE: ${{ github.event.inputs.environment }} + '環境へのデプロイが成功しました。'
+  SLACK_FAILURE_MESSAGE: ${{ github.event.inputs.environment }} + '環境へのデプロイに失敗しました。'
+
+jobs:
+  # イメージのビルドとECRへのプッシュ
+  image_build_push:
+    name: Build and Push Image
+    environment: ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      # チェックアウト
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+
+      # AWS認証の設定
+      - name: Credentials Setup
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
+      # ECRログイン
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # イメージのビルドとECRへのプッシュ
+      - name: Build and Push Image
+        id: build-push-image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKER_FILE }}
+          push: true
+          tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECS_REPOSITORY_NAME }}:${{ github.sha }}
+          target: ${{ env.DOCKER_BUILD_TARGET }}
+          platforms: ${{ env.DOCKER_PLATFORM }}
+
+      # タスク定義の更新
+      - name: Register Task Definition
+        id: register-task-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION_PATH }}
+          container-name: ${{ env.ECS_CONTAINER_NAME }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECS_REPOSITORY_NAME }}:${{ github.sha }}
+          log-configuration-options: |
+            awslogs-stream-prefix=${{ github.sha }}
+
+      # タスク定義ファイルをartifactとしてアップロード
+      - name: Upload rendered task definition
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-task-def
+          path: ${{ steps.register-task-definition.outputs.task-definition }}
+
+    outputs:
+      task-definition: ${{ steps.register-task-definition.outputs.task-definition }}
+
+  # サービスの更新
+  update_service:
+    name: Update Service
+    environment: ${{ github.event.inputs.environment }}
+    needs: image_build_push
+    runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      # AWS認証の設定
+      - name: Credentials Setup
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+
+      # artifactからタスク定義ファイルをダウンロード
+      - name: Download rendered task definition
+        uses: actions/download-artifact@v4
+        with:
+          name: rendered-task-def
+          path: ./rendered-task-def
+
+      # ファイル名を取得して環境変数にセット
+      - name: Get task definition file name
+        id: get-task-def
+        run: |
+          echo "TASK_DEF_FILE=$(find ./rendered-task-def -name '*.json' | head -n 1)" >> $GITHUB_ENV
+
+      - name: Show task definition file name
+        run: echo ${{ env.TASK_DEF_FILE }}
+
+      # タスク定義の更新とサービスのデプロイ
+      - name: Update Service
+        id: update-service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ env.TASK_DEF_FILE }}
+          cluster: ${{ env.ECS_CLUSTER_NAME }}
+          service: ${{ env.ECS_SERVICE_NAME }}
+          wait-for-service-stability: true
+          propagate-tags: SERVICE
+
+  # Slack通知
+  slack_notify:
+    name: Slack Notification
+    environment: ${{ github.event.inputs.environment }}
+    needs: [image_build_push, update_service]
+    if: ${{ always() && vars.IS_SLACK_NOTIFY == 'true' }}
+    runs-on: ubuntu-22.04
+    steps:
+      # 成功通知
+      - name: Slack Notification on Success
+        if: ${{ !contains(needs.*.result, 'failure') }}
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          webhook-url: ${{ env.SLACK_WEBHOOK_URL }}
+          message: ${{ env.SLACK_SUCCESS_MESSAGE }}
+          icon: ${{ env.SLACK_ICON }}
+          username: ${{ env.SLACK_USERNAME }}
+
+      # 失敗通知
+      - name: Slack Notification on Failure
+        if: ${{ contains(needs.*.result, 'failure') }}
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          webhook-url: ${{ env.SLACK_WEBHOOK_URL }}
+          message: ${{ env.SLACK_FAILURE_MESSAGE }}
+          icon: ${{ env.SLACK_ICON }}
+          username: ${{ env.SLACK_USERNAME }}
