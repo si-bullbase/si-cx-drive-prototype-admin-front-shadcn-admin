@@ -11,6 +11,9 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { IconHeartHandshake } from "@tabler/icons-react";
+import { EditDialog } from './edite-dialog'
+import { ImagePopup } from './image-popup'
+import { DeletePopup } from './delete-popup'
 
 // interface SnsSuggestProps {
 //   id: string;
@@ -59,8 +62,24 @@ import { IconHeartHandshake } from "@tabler/icons-react";
 
 export function SnsSuggest() {
   const [open, setOpen] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+
+  const handleSend = async () => {
+    try {
+      // 実際の送信処理をここに実装
+      // 例: await sendSnsPost(postData);
+      
+      // 成功時のポップアップ
+      setShowSuccessPopup(true);
+    } catch (error) {
+      // 失敗時のポップアップ
+      setShowErrorPopup(true);
+    }
+  };
 
   return (
+    <>
     <Collapsible open={open} onOpenChange={setOpen} className="py-2">
         <Card>
           <div className={`grid grid-cols-[4%_36%_12%_20%_16%_20%] items-center ${open ? ' border-b' : ''}`}>
@@ -93,17 +112,13 @@ export function SnsSuggest() {
             {/* アクション */}
             <div className="flex gap-2 justify-center">
               {/* 送信ボタン */}
-              <button type="button" className="p-2 rounded hover:bg-green-100 transition" title="送信">
+              <button type="button" className="p-2 rounded hover:bg-green-100 transition" title="送信" onClick={handleSend}>
                 <img src="/images/send.svg" alt="送信" width="32" />
               </button>
-              {/* 編集ボタン */}
-              <button type="button" className="p-2 rounded hover:bg-blue-100 transition" title="編集">
-                <img src="/images/edite.svg" alt="編集" width="32" />
-              </button>
+              {/* 編集ボタン → EditeDialogで置き換え */}
+              <EditDialog />
               {/* 削除ボタン */}
-              <button type="button" className="p-2 rounded hover:bg-red-100 transition" title="削除">
-                <img src="/images/trash.svg" alt="削除" width="32" />
-              </button>
+              <DeletePopup />
             </div>
             {/* 展開/折りたたみトリガー */}
             <div className="flex justify-center">
@@ -210,5 +225,20 @@ export function SnsSuggest() {
           </CollapsibleContent>
         </Card>
       </Collapsible>
+      
+      <ImagePopup 
+        isOpen={showSuccessPopup}
+        onClose={() => setShowSuccessPopup(false)}
+        imageSrc="/images/send-success.svg"
+        altText="送信完了"
+      />
+      
+      <ImagePopup 
+        isOpen={showErrorPopup}
+        onClose={() => setShowErrorPopup(false)}
+        imageSrc="/images/send-fail.svg"
+        altText="送信失敗"
+      />
+    </>
   );
 } 
