@@ -17,10 +17,13 @@ COPY . .
 RUN pnpm run build
 
 # Production stage
-FROM nginx:alpine
+FROM nginx:alpine AS prod
 
 # Copy built app to nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy public directory for static assets
+COPY --from=builder /app/public /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
