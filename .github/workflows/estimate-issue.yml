@@ -1,12 +1,13 @@
-name: AI見積もり
+name: AI Issue Estimation
 on:
-  issues:
-    types: [opened, edited]
+  issue_comment:
+    types: [created]
 
 jobs:
   estimate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    if: github.event.comment.body == '/ai' && github.event.comment.user.type != 'Bot'
+    timeout-minutes: 1
     steps:
       - name: Estimate with AI
         uses: actions/github-script@v7
