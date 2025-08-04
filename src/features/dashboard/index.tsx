@@ -15,10 +15,43 @@ import {
 } from '@tabler/icons-react'
 import { SnsSuggestRankingCard } from './components/sns-suggest-ranking'
 import { mockDashboardData } from './mock-data'
-import type { DashboardData } from './types'
+import { fetchDashboardSummary } from './api'
+import type { BoothJobCrossItem, DashboardData } from './types'
+import { useState, useEffect } from 'react'
 
 export default function Dashboard() {
-  const data: DashboardData = mockDashboardData
+  const [data, setData] = useState<DashboardData>(mockDashboardData)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        setLoading(true)
+        const dashboardData = await fetchDashboardSummary()
+        setData(dashboardData)
+        setError(null)
+      } catch (err) {
+        console.error('Failed to fetch dashboard data:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+        // Keep using mock data as fallback
+        setData(mockDashboardData)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadDashboardData()
+  }, [])
+
+  if (loading) {
+    return (
+      <Main>
+        <div className='flex items-center justify-center h-96'>
+          <div className='text-lg'>Loading dashboard...</div>
+        </div>
+      </Main>
+    )
+  }
 
   return (
     <>

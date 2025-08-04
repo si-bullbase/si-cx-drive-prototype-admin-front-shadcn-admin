@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import { IconHeartHandshake } from "@tabler/icons-react";
 import { EditDialog } from './edite-dialog'
 import { ImagePopup } from './image-popup'
 import { DeletePopup } from './delete-popup'
-import { mockSnsSuggestData } from '../mock-data'
+import { fetchPosts } from '../api'
 import type { SnsSuggestItem } from '../types'
 
 interface SnsSuggestProps {
@@ -88,8 +88,8 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
             <div>
               <ul className="pl-2 space-y-1">
                 <li className="py-0.5"><span className="text-green-500 font-bold">・</span>エンゲージメント率 {item.engagement.rate}</li>
-                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>インプレッション数 {item.engagement.impressions.toLocaleString()}</li>
-                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>配信対象数 {item.engagement.distribution_count}</li>
+                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>インプレッション数 {(item.engagement.impressions || 0).toLocaleString()}</li>
+                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>配信対象数 {item.engagement.distribution_count || 0}</li>
               </ul>
             </div>
             {/* アクション */}
@@ -235,11 +235,38 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
 }
 
 export function SnsSuggest() {
-  const data = mockSnsSuggestData;
+  const [data, setData] = useState<SnsSuggestItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        setLoading(true);
+        const posts = await fetchPosts();
+        setData(posts);
+        console.log(posts);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPosts();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500">Error: {error}</div>;
+  }
 
   return (
     <div className="space-y-4">
-      {data.items.map((item) => (
+      {data.map((item) => (
         <SnsSuggestCard key={item.id} item={item} />
       ))}
     </div>

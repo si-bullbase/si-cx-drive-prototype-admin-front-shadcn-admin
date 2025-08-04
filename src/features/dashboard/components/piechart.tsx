@@ -28,7 +28,6 @@ export  function SimplePieChart({ data }: SimplePieChartProps) {
         ))}
       </Pie>
       <Tooltip />
-      <Legend />
     </PieChart>
     </ResponsiveContainer>
   );
