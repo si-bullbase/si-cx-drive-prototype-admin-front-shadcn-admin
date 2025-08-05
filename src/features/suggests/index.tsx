@@ -1,15 +1,7 @@
-import { useState } from "react";
-
 import { Main } from '@/components/layout/main'
 import { SnsSuggest } from "./components/sns-suggest";
-import { getSuggestsWithPagination } from "./data/suggests";
-import { SuggestsPagination } from "./components/suggests-pagination";
 
 export default function Suggests() {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-
-  const { data, pagination } = getSuggestsWithPagination(page, pageSize);
 
   return (
     <Main>
@@ -24,19 +16,7 @@ export default function Suggests() {
           </div>
         </div>
       </div>
-      {data.map((suggest) => (
-        <SnsSuggest key={suggest.id} {...suggest} />
-      ))}
-      <div className="mt-4">
-        <SuggestsPagination
-          pagination={pagination}
-          onPageChange={setPage}
-          onPageSizeChange={(size) => {
-            setPageSize(size);
-            setPage(1);
-          }}
-        />
-      </div>
+      <SnsSuggest />
     </Main>
   );
 }
