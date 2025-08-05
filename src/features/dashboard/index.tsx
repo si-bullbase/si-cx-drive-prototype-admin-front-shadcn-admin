@@ -16,13 +16,15 @@ import {
 import { SnsSuggestRankingCard } from './components/sns-suggest-ranking'
 import { mockDashboardData } from './mock-data'
 import { fetchDashboardSummary } from './api'
-import type { BoothJobCrossItem, DashboardData } from './types'
+import type { DashboardData } from './types'
 import { useState, useEffect } from 'react'
 
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData>(mockDashboardData)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -69,7 +71,7 @@ export default function Dashboard() {
           {/* SNSサジェストランキング */}
           <TabsContent value='overview' className='space-y-4'>
             <div className='grid grid-cols-1 gap-4 w-full'>
-              <SnsSuggestRankingCard />
+              <SnsSuggestRankingCard data={data.snsSuggestRanking} />
             </div>
             {/* 参加人数 */}
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-3'>

@@ -1,9 +1,11 @@
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog'
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useForm } from 'react-hook-form'
+import { useState, useEffect } from 'react'
+import { updatePost } from '../api'
 
 interface SnsOption {
   label: string
@@ -23,33 +25,70 @@ interface FormValues {
 }
 
 interface EditDialogProps {
+  id?: number
   initialContent?: string
   initialSns?: string
   onSubmit?: (data: FormValues) => void
+  onSuccess?: () => void
 }
 
 export function EditDialog({ 
+  id,
   initialContent = '', 
   initialSns = 'LINE',
-  onSubmit: onSubmitProp 
+  onSubmit: onSubmitProp,
+  onSuccess
 }: EditDialogProps = {}) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+  
   const { register, handleSubmit, watch, reset, setValue, formState: { errors } } = useForm<FormValues>({
     defaultValues: { content: initialContent, sns: initialSns }
   })
 
   const selectedSns = watch('sns')
 
-  const onSubmit = (data: FormValues) => {
+  useEffect(() => {
+    if (open) {
+      setValue('content', initialContent)
+      setValue('sns', initialSns)
+    }
+  }, [open, initialContent, initialSns, setValue])
+
+  const onSubmit = async (data: FormValues) => {
     if (onSubmitProp) {
       onSubmitProp(data)
-    } else {
-      alert(JSON.stringify(data, null, 2))
+      return
     }
-    reset()
+    
+    if (!id) {
+      alert('IDが指定されていません')
+      return
+    }
+
+    try {
+      setIsLoading(true)
+      await updatePost(id, {
+        content: data.content,
+        platform: data.sns
+      })
+      
+      // 成功時の処理
+      setOpen(false)
+      reset()
+      if (onSuccess) {
+        onSuccess()
+      }
+    } catch (error) {
+      console.error('Failed to update post:', error)
+      alert('更新に失敗しました')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button type="button" className="p-2 rounded hover:bg-blue-100 transition" title="編集">
           <img src="/images/edite.svg" alt="編集" width="32" />
@@ -87,13 +126,24 @@ export function EditDialog({
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <div className="flex justify-center w-full gap-2">
-                
-                <Button type="button" variant="outline" className='w-3/8 rounded-full'>もどる</Button>
-                <Button type="submit" className='w-3/8 bg-secondary rounded-full'>保存</Button>
-              </div>
-            </DialogClose>
+            <div className="flex justify-center w-full gap-2">
+              <Button 
+                type="button" 
+                variant="outline" 
+                className='w-3/8 rounded-full'
+                onClick={() => setOpen(false)}
+                disabled={isLoading}
+              >
+                もどる
+              </Button>
+              <Button 
+                type="submit" 
+                className='w-3/8 bg-secondary rounded-full'
+                disabled={isLoading}
+              >
+                {isLoading ? '保存中...' : '保存'}
+              </Button>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>

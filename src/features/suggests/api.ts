@@ -44,3 +44,30 @@ export async function fetchPosts(): Promise<SnsSuggestItem[]> {
   const data: SnsSuggestApiResponse = await response.json()
   return data.items.map(transformApiItemToSnsSuggestItem)
 }
+
+export async function sendLineBroadcast(id: number): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/line/broadcast/${id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Failed to send broadcast: ${response.status}`)
+  }
+}
+
+export async function updatePost(id: number, data: { content: string; platform: string }): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Failed to update post: ${response.status}`)
+  }
+}

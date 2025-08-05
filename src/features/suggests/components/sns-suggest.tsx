@@ -14,7 +14,9 @@ import { IconHeartHandshake } from "@tabler/icons-react";
 import { EditDialog } from './edite-dialog'
 import { ImagePopup } from './image-popup'
 import { DeletePopup } from './delete-popup'
-import { fetchPosts } from '../api'
+import { SendConfirmDialog } from './send-confirm-dialog'
+import { SuggestsPagination } from './suggests-pagination'
+import { fetchPosts, sendLineBroadcast } from '../api'
 import type { SnsSuggestItem } from '../types'
 
 interface SnsSuggestProps {
@@ -42,14 +44,15 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
-  const handleSend = async () => {
+  const handleSendConfirm = async () => {
     try {
-      // 実際の送信処理をここに実装
-      // 例: await sendSnsPost(postData);
+      // LINE配信API呼び出し
+      await sendLineBroadcast(item.id);
       
       // 成功時のポップアップ
       setShowSuccessPopup(true);
     } catch (error) {
+      console.error('Failed to send broadcast:', error);
       // 失敗時のポップアップ
       setShowErrorPopup(true);
     }
@@ -95,11 +98,17 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
             {/* アクション */}
             <div className="flex gap-2 justify-center">
               {/* 送信ボタン */}
-              <button type="button" className="p-2 rounded hover:bg-green-100 transition" title="送信" onClick={handleSend}>
-                <img src="/images/send.svg" alt="送信" width="32" />
-              </button>
+              <SendConfirmDialog onConfirm={handleSendConfirm}>
+                <button type="button" className="p-2 rounded hover:bg-green-100 transition" title="送信">
+                  <img src="/images/send.svg" alt="送信" width="32" />
+                </button>
+              </SendConfirmDialog>
               {/* 編集ボタン → EditeDialogで置き換え */}
-              <EditDialog />
+              <EditDialog 
+                id={item.id}
+                initialContent={item.content}
+                initialSns={item.platform}
+              />
               {/* 削除ボタン */}
               <DeletePopup />
             </div>
@@ -238,6 +247,8 @@ export function SnsSuggest() {
   const [data, setData] = useState<SnsSuggestItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -264,11 +275,41 @@ export function SnsSuggest() {
     return <div className="text-center text-red-500">Error: {error}</div>;
   }
 
+  // 現在のページに対応するデータを計算
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentPageData = data.slice(startIndex, endIndex);
+  
+  // ページング情報を計算
+  const totalPages = Math.ceil(data.length / pageSize);
+  const pagination = {
+    currentPage: page,
+    pageSize,
+    totalItems: data.length,
+    totalPages,
+    hasNextPage: page < totalPages,
+    hasPreviousPage: page > 1
+  };
+
   return (
-    <div className="space-y-4">
-      {data.map((item) => (
-        <SnsSuggestCard key={item.id} item={item} />
-      ))}
-    </div>
+    <>
+      <div className="space-y-4">
+        {currentPageData.map((item) => (
+          <SnsSuggestCard key={item.id} item={item} />
+        ))}
+      </div>
+      {data.length > 0 && (
+        <div className="mt-4">
+          <SuggestsPagination
+            pagination={pagination}
+            onPageChange={setPage}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setPage(1);
+            }}
+          />
+        </div>
+      )}
+    </>
   );
 }
