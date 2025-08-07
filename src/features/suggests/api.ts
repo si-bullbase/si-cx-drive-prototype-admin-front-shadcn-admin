@@ -35,14 +35,28 @@ function transformApiItemToSnsSuggestItem(apiItem: ApiSnsSuggestItem): SnsSugges
 }
 
 export async function fetchPosts(): Promise<SnsSuggestItem[]> {
-  const response = await fetch(`${API_BASE_URL}/posts/`)
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch posts: ${response.status}`)
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/`)
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch posts: ${response.status}`)
+    }
+    
+    const text = await response.text()
+    
+    // Check if response is HTML (indicating an error page)
+    if (text.trim().startsWith('<!')) {
+      throw new Error('API returned HTML instead of JSON')
+    }
+    
+    const data: SnsSuggestApiResponse = JSON.parse(text)
+    return data.items.map(transformApiItemToSnsSuggestItem)
+  } catch (error) {
+    console.error('API fetch failed, using mock data:', error)
+    // Import mock data dynamically to avoid circular dependencies
+    const { mockSnsSuggestData } = await import('./mock-data')
+    return mockSnsSuggestData.items
   }
-  
-  const data: SnsSuggestApiResponse = await response.json()
-  return data.items.map(transformApiItemToSnsSuggestItem)
 }
 
 export async function sendLineBroadcast(id: number): Promise<void> {

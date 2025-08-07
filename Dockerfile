@@ -1,6 +1,6 @@
 # Multi-stage build for React app
 FROM node:20-alpine AS builder
-
+ARG VITE_API_TARGET
 WORKDIR /app
 
 # Copy package files
