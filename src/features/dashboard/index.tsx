@@ -30,12 +30,12 @@ export default function Dashboard() {
     const loadDashboardData = async () => {
       try {
         setLoading(true)
+        setError(null)
         const dashboardData = await fetchDashboardSummary()
         setData(dashboardData)
-        setError(null)
       } catch (err) {
-        console.error('Failed to fetch dashboard data:', err)
-        setError(err instanceof Error ? err.message : 'Unknown error')
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+        setError(errorMessage)
         // Keep using mock data as fallback
         setData(mockDashboardData)
       } finally {
@@ -78,7 +78,7 @@ export default function Dashboard() {
               <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
                 <CardContent className='h-40 py-4 flex flex-col items-center justify-between'>
                   <IconHeartHandshake className='w-6 h-6' />
-                  <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>{data.participants.value}人</div>
+                  <div className='text-6xl font-bold' style={{ color: '#06C42C' }}>{data.participants.value.toLocaleString()}人</div>
                   <div className='text-sm'>{data.participants.name}</div>
                 </CardContent>
               </Card>
@@ -86,14 +86,14 @@ export default function Dashboard() {
               <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
                 <CardContent className='h-40 py-4 flex flex-col items-center justify-between'>
                   <IconHeartHandshake className='w-6 h-6' />
-                  <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>{data.snsSuggestCount.value}件</div>
+                  <div className='text-6xl font-bold' style={{ color: '#06C42C' }}>{data.snsSuggestCount.value.toLocaleString()}件</div>
                   <div className='text-sm'>{data.snsSuggestCount.name}</div>
                 </CardContent>
               </Card>
               <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
                 <CardContent className='h-40 py-4 flex flex-col items-center justify-between'>
                   <IconHeartHandshake className='w-6 h-6' />
-                  <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>{data.hoge.value}</div>
+                  <div className='text-6xl font-bold' style={{ color: '#06C42C' }}>{data.hoge.value.toLocaleString()}</div>
                   <div className='text-sm'>{data.hoge.name}</div>
                 </CardContent>
               </Card>
@@ -111,9 +111,12 @@ export default function Dashboard() {
                     className='h-40 py-4 flex flex-col items-center justify-between border rounded-lg'
                     style={{ backgroundColor: '#E6F9EA' }}
                   >
-                    <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>{item.rank}位</div>
-                    <div className='text-2xl font-bold text-center' style={{ color: '#06C42C' }}>{item.name}</div>
-                    <div className='text-sm' style={{ color: '#1A1A1A' }}>{item.value}％</div>
+                    <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
+                      <span className='text-6xl'>{item.rank}</span>
+                      <span className='text-2xl'>位</span>
+                    </div>
+                    <div className='text-4xl font-bold text-center' style={{ color: '#06C42C' }}>{item.name}</div>
+                    <div className='text-lg' style={{ color: '#1A1A1A' }}>{item.value}％</div>
                   </div>
                 ))}
               </div>
@@ -124,7 +127,7 @@ export default function Dashboard() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>職種別</CardTitle>
+                  <CardTitle className='text-3xl text-center' style={{ color: '#06C42C' }}>職種別</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <SimplePieChart data={data.jobPie} />
@@ -132,7 +135,7 @@ export default function Dashboard() {
               </Card>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>業種別</CardTitle>
+                  <CardTitle className='text-3xl text-center' style={{ color: '#06C42C' }}>業種別</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <SimplePieChart data={data.industryPie} />
@@ -144,7 +147,7 @@ export default function Dashboard() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>ブース人気ランキング</CardTitle>
+                  <CardTitle className='text-3xl' style={{ color: '#06C42C', textAlign: 'center' }}>ブース人気ランキング</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <Overview data={data.boothRanking} />
@@ -152,7 +155,7 @@ export default function Dashboard() {
               </Card>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>技術トピック別 関心度</CardTitle>
+                  <CardTitle className='text-3xl' style={{ color: '#06C42C', textAlign: 'center' }}>技術トピック別 関心度</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <Overview data={data.techTopicInterest} />
@@ -164,7 +167,7 @@ export default function Dashboard() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-1'>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>ブース×職種クロス分析</CardTitle>
+                  <CardTitle className='text-3xl' style={{ color: '#06C42C', textAlign: 'center' }}>ブース×職種クロス分析</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <StackedBarChart data={data.boothJobCross} />
@@ -176,7 +179,7 @@ export default function Dashboard() {
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-1'>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>職種別×参加目的クロス分析</CardTitle>
+                  <CardTitle className='text-3xl' style={{ color: '#06C42C', textAlign: 'center' }}>職種別×参加目的クロス分析</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <StackedBarChart data={data.jobPurposeCross} />
@@ -188,7 +191,7 @@ export default function Dashboard() {
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-1'>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>MBTI分析</CardTitle>
+                  <CardTitle className='text-3xl' style={{ color: '#06C42C', textAlign: 'center' }}>MBTI分析</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <SimplePieChart data={data.mbtiAnalysis} />
@@ -200,7 +203,7 @@ export default function Dashboard() {
               <div className='grid grid-cols-1 gap-4 lg:grid-cols-1'>
               <Card className='col-span-1 lg:col-span-1'>
                 <CardHeader>
-                  <CardTitle style={{ color: '#06C42C', textAlign: 'center' }}>MBTI別×参加目的クロス分析</CardTitle>
+                  <CardTitle className='text-3xl' style={{ color: '#06C42C', textAlign: 'center' }}>MBTI別×参加目的クロス分析</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2'>
                   <StackedBarChart data={data.mbtiPurposeCross} />

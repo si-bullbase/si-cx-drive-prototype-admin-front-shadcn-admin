@@ -63,7 +63,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
 
   return (
     <>
-    <Collapsible open={open} onOpenChange={setOpen} className="py-2">
+    <Collapsible open={open} onOpenChange={setOpen} className="py-0">
         <Card>
           <div className={`grid grid-cols-[4%_36%_12%_20%_16%_20%] items-center ${open ? ' border-b' : ''}`}>
             {/* SNSアイコン */}
@@ -75,7 +75,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
               <div className="line-clamp-2">{item.content}</div>
               <div className="flex gap-1 mt-1">
                 {item.keywords.map((keyword, index) => (
-                  <span key={index} className="bg-primary rounded px-2 py-0.5 text-s text-white">
+                  <span key={index} className="bg-primary rounded px-2 py-0.5 text-s">
                     {keyword}
                   </span>
                 ))}
@@ -146,7 +146,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                   
                   <div className="grid h-3/5">
                     <div className='flex flex-col justify-between'>
-                      <Card className="bg-gray-100">
+                      <Card className="bg-gray-100 border-0 shadow-none">
                         <CardHeader>
                           <CardTitle>
                             投稿の狙いと根拠
@@ -164,58 +164,59 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                 {/* 右側（60%） */}
                 <div className="space-y-4">
                     <div className="grid grid-cols-3 gap-4">
-                      <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
+                      <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
                         <CardContent className='flex flex-col items-center justify-between'>
-                          <IconHeartHandshake className='w-6 h-6' />
+                          <img src="/images/heart-handshake.svg" alt="エンゲージメント率アイコン" className="w-6 h-6 mb-2" />
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.participants || 0}人
                           </div>
-                          <div className='text-sm'>参加人数</div>
+                          <div className='text-sm'>エンゲージメント率</div>
                         </CardContent>
                       </Card>
-                      <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
+                      <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
                         <CardContent className='flex flex-col items-center justify-between'>
-                          <IconHeartHandshake className='w-6 h-6' />
-                          <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
+                          <img src="/images/bar-chart-3.svg" alt="コメントアイコン" className="w-6 h-6 mb-2" />
+                             <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.comments || 0}
                           </div>
-                          <div className='text-sm'>コメント数</div>
+                          <div className='text-sm'>インプレッション数</div>
                         </CardContent>
                       </Card>
-                      <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
+                      <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
                         <CardContent className='flex flex-col items-center justify-between'>
-                          <IconHeartHandshake className='w-6 h-6' />
+                          <img src="/images/wifi.svg" alt="Wi-Fiアイコン" className="w-6 h-6 mb-2" />
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.shares || 0}
                           </div>
-                          <div className='text-sm'>シェア数</div>
+                          <div className='text-sm'>配信対象数
+                          </div>
                         </CardContent>
                       </Card>
-                      <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
+                      <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
                         <CardContent className='flex flex-col items-center justify-between'>
-                          <IconHeartHandshake className='w-6 h-6' />
+                          <img src="/images/shopping-cart.svg" alt="CV率のアイコン" className="w-6 h-6 mb-2"/>
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.saves || 0}
                           </div>
-                          <div className='text-sm'>保存数</div>
+                          <div className='text-sm'>CV率</div>
                         </CardContent>
                       </Card>
-                      <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
+                      <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
                         <CardContent className='flex flex-col items-center justify-between'>
-                          <IconHeartHandshake className='w-6 h-6' />
+                          <img src="/images/mouse-pointer-click.svg" alt="クリック率" className="w-6 h-6 mb-2" />
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.clicks || 0}
                           </div>
                           <div className='text-sm'>クリック数</div>
                         </CardContent>
                       </Card>
-                      <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
+                      <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
                         <CardContent className='flex flex-col items-center justify-between'>
-                          <IconHeartHandshake className='w-6 h-6' />
+                          <img src="/images/eye.svg" alt="既読率のアイコン" className="w-6 h-6 mb-2" />
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.follows || 0}
                           </div>
-                          <div className='text-sm'>フォロー数</div>
+                          <div className='text-sm'>既読率</div>
                         </CardContent>
                       </Card>
                     </div>                  
@@ -256,7 +257,6 @@ export function SnsSuggest() {
         setLoading(true);
         const posts = await fetchPosts();
         setData(posts);
-        console.log(posts);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error occurred');
       } finally {
@@ -294,8 +294,8 @@ export function SnsSuggest() {
   return (
     <>
       <div className="space-y-4">
-        {currentPageData.map((item) => (
-          <SnsSuggestCard key={item.id} item={item} />
+        {currentPageData.map((item, index) => (
+          <SnsSuggestCard key={`${item.id}-${startIndex + index}`} item={item} />
         ))}
       </div>
       {data.length > 0 && (

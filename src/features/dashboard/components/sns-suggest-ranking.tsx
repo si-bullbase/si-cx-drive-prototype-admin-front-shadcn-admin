@@ -31,13 +31,13 @@ export function SnsSuggestRankingCard({ data }: Props) {
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div className="flex items-center space-x-2">
             <img src="/images/LINE.svg" alt="LINE" width="24" />
-            <CardTitle className="text-base font-bold">サジェストランキング</CardTitle>
+            <CardTitle className="text-xl font-bold">サジェストランキング</CardTitle>
           </div>
           <span className="text-xs text-gray-400">00:00 更新</span>
         </CardHeader>
         <CardContent className="space-y-3 pt-0">
           {data.items.map((item, index) => (
-            <div key={item.id} className="flex items-center bg-gray-50 rounded-lg p-3 border border-gray-200">
+            <div key={item.id} className="flex items-center bg-gray-50 rounded-lg p-3">
               <div className="flex flex-col items-center mr-3 min-w-[2.5rem]">
                 <span className="text-green-600 font-bold text-lg">{index + 1}位</span>
               </div>

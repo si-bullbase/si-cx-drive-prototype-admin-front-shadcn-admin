@@ -5,7 +5,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 import type { BoothJobCrossItem, CrossAnalysisItem } from '../types'
@@ -35,9 +34,93 @@ interface StackedBarChartProps {
   data: BoothJobCrossItem[] | CrossAnalysisItem[]
 }
 
-export function StackedBarChart({ data }: StackedBarChartProps) {
+const CustomLegend = (props: any) => {
+  const { payload } = props;
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <div className="flex flex-wrap justify-center gap-4 mb-4">
+      {payload.map((entry: any, index: number) => (
+        <div key={index} className="flex items-center gap-1">
+          <div 
+            className="w-3 h-3 rounded-sm" 
+            style={{ backgroundColor: entry.color }}
+          />
+          <span className="text-sm text-black">{entry.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const CustomTooltip = (props: any) => {
+  const { active, payload, label } = props;
+  
+  if (active && payload && payload.length) {
+    const total = payload.reduce((sum: number, item: any) => sum + item.value, 0);
+    
+    return (
+      <div className="bg-white p-4 border border-gray-200 shadow-lg rounded-lg">
+        <h3 className="font-semibold text-gray-800 mb-2">{`${label}`}</h3>
+        <div className="space-y-1">
+          {payload
+            .filter((item: any) => item.value > 0)
+            .sort((a: any, b: any) => b.value - a.value)
+            .map((item: any, index: number) => (
+              <div key={index} className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="w-3 h-3 rounded-sm" 
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-sm text-gray-700">{item.name}</span>
+                </div>
+                <div className="text-right">
+                  <span className="font-medium text-gray-800">{item.value}人</span>
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({((item.value / total) * 100).toFixed(1)}%)
+                  </span>
+                </div>
+              </div>
+            ))}
+        </div>
+        <div className="mt-2 pt-2 border-t border-gray-100">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-gray-700">合計</span>
+            <span className="font-bold text-gray-800">{total}人</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  return null;
+};
+
+export function StackedBarChart({ data }: StackedBarChartProps) {
+  const legendData = 'executiveOfficer' in data[0] ? 
+    Object.keys(jobTypeLabels).map(key => ({
+      value: jobTypeLabels[key as keyof typeof jobTypeLabels],
+      color: key === 'others' ? '#15803d' : 
+             key === 'recruitment' ? '#16a34a' :
+             key === 'marketing' ? '#22c55e' :
+             key === 'salesStaff' ? '#4ade80' :
+             key === 'engineer' ? '#86efac' :
+             key === 'manager' ? '#bbf7d0' : '#dcfce7'
+    })) :
+    Object.keys(purposeLabels).map(key => ({
+      value: purposeLabels[key as keyof typeof purposeLabels],
+      color: key === 'others' ? '#15803d' :
+             key === 'purpose7' ? '#16a34a' :
+             key === 'purpose6' ? '#22c55e' :
+             key === 'purpose5' ? '#4ade80' :
+             key === 'purpose4' ? '#86efac' :
+             key === 'purpose3' ? '#bbf7d0' :
+             key === 'purpose2' ? '#dcfce7' : '#f0fdf4'
+    }));
+
+  return (
+    <div>
+      <CustomLegend payload={legendData} />
+      <ResponsiveContainer width="100%" height={300}>
       <BarChart 
         data={data} 
         margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
@@ -47,8 +130,7 @@ export function StackedBarChart({ data }: StackedBarChartProps) {
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis dataKey="name" />
         <YAxis />
-        <Tooltip />
-        <Legend />
+        <Tooltip content={<CustomTooltip />} />
         {/* ブース×職種クロス */}
         {'executiveOfficer' in data[0] ? (
           <>
@@ -74,6 +156,7 @@ export function StackedBarChart({ data }: StackedBarChartProps) {
           </>
         )}
       </BarChart>
-    </ResponsiveContainer>
+      </ResponsiveContainer>
+    </div>
   );
 }
