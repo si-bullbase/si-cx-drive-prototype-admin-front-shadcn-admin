@@ -6,7 +6,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 1,
       platform: "LINE",
-      keywords: ["生成AI", "CXDrive", "展示会"],
+      keyword: ["生成AI", "CXDrive", "展示会"],
       content: "展示会で注目の生成AIツール「CXDrive」！来場者の皆様からの熱い質問が続々と...「ROIはどのくらい改善できる？」「導入までの期間は？」",
       target: "マーケティング",
       engagement: {
@@ -30,7 +30,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 2,
       platform: "Instagram",
-      keywords: ["高校受験", "塾", "スマートフォン"],
+      keyword: ["高校受験", "塾", "スマートフォン"],
       content: "高校受験を控えた家庭の悩みに、塾/私中の子どものスマートフォン利用にルールを設けるーー。学習塾「明光義塾」を展開する明光ネットワークジャパン（東京都新宿区）が高校進学を希望する中学3年生の…",
       target: "エンジニア",
       engagement: {
@@ -54,7 +54,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 3,
       platform: "Twitter",
-      keywords: ["参院選", "期日前投票", "SNS"],
+      keyword: ["参院選", "期日前投票", "SNS"],
       content: "参院選（20日投開票）の期日前投票で、有権者が投票所で候補者や政党名の記入を終えた投票用紙を撮影し、X（旧ツイッター）に投稿する事例が相次いでいる。「推し」の候補者や政党の支持を広げる目的が…",
       target: "経営者・役員",
       engagement: {
@@ -78,7 +78,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 4,
       platform: "LINE",
-      keywords: ["DX", "業務効率化", "AI"],
+      keyword: ["DX", "業務効率化", "AI"],
       content: "AIを活用した業務効率化の最新事例を紹介。DX推進のための具体的なステップを解説します。",
       target: "管理職",
       engagement: {
@@ -102,7 +102,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 5,
       platform: "Instagram",
-      keywords: ["キャリア", "働き方", "リモートワーク"],
+      keyword: ["キャリア", "働き方", "リモートワーク"],
       content: "エンジニアのための最新リモートワーク事情。キャリアアップに役立つ情報をまとめました。",
       target: "エンジニア",
       engagement: {
@@ -126,7 +126,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 6,
       platform: "Twitter",
-      keywords: ["営業", "顧客開拓", "SNS活用"],
+      keyword: ["営業", "顧客開拓", "SNS活用"],
       content: "SNSを活用した新規顧客開拓のコツを解説。営業現場で使える最新テクニックを紹介します。",
       target: "セールス・営業",
       engagement: {
@@ -150,7 +150,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 7,
       platform: "LINE",
-      keywords: ["マーケティング", "データ分析", "トレンド"],
+      keyword: ["マーケティング", "データ分析", "トレンド"],
       content: "最新のマーケティングトレンドとデータ分析手法を解説。成果につながる施策を紹介します。",
       target: "マーケティング",
       engagement: {
@@ -174,7 +174,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 8,
       platform: "Instagram",
-      keywords: ["採用", "人材育成", "企業文化"],
+      keyword: ["採用", "人材育成", "企業文化"],
       content: "人事担当者向け、企業文化を活かした採用・人材育成のポイントを紹介します。",
       target: "人事・採用",
       engagement: {
@@ -198,7 +198,7 @@ export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } =
     {
       id: 9,
       platform: "Twitter",
-      keywords: ["副業", "働き方改革", "多様性"],
+      keyword: ["副業", "働き方改革", "多様性"],
       content: "多様な働き方を実現する副業の始め方と注意点を解説。最新の働き方改革事例も紹介します。",
       target: "その他",
       engagement: {
