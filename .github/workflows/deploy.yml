@@ -30,6 +30,7 @@ env:
   SLACK_USERNAME: "Github Actions"
   SLACK_SUCCESS_MESSAGE: ${{ github.event.inputs.environment }} + '環境へのデプロイが成功しました。'
   SLACK_FAILURE_MESSAGE: ${{ github.event.inputs.environment }} + '環境へのデプロイに失敗しました。'
+  VITE_API_TARGET: ${{ vars.VITE_API_TARGET }}
 
 jobs:
   # イメージのビルドとECRへのプッシュ
@@ -70,6 +71,8 @@ jobs:
           tags: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECS_REPOSITORY_NAME }}:${{ github.sha }}
           target: ${{ env.DOCKER_BUILD_TARGET }}
           platforms: ${{ env.DOCKER_PLATFORM }}
+          build-args: |
+            VITE_API_TARGET=${{ env.VITE_API_TARGET }}
 
       # タスク定義の更新
       - name: Register Task Definition
