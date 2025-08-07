@@ -22,7 +22,6 @@ import { useState, useEffect } from 'react'
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData>(mockDashboardData)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
 
 
@@ -30,12 +29,9 @@ export default function Dashboard() {
     const loadDashboardData = async () => {
       try {
         setLoading(true)
-        setError(null)
         const dashboardData = await fetchDashboardSummary()
         setData(dashboardData)
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error'
-        setError(errorMessage)
         // Keep using mock data as fallback
         setData(mockDashboardData)
       } finally {

@@ -1,6 +1,6 @@
-import { SnsSuggestApiResponse } from './types'
+import { ApiSnsSuggestItem } from './types'
 
-export const mockSnsSuggestData: SnsSuggestApiResponse = {
+export const mockSnsSuggestData: { total: number; items: ApiSnsSuggestItem[] } = {
   total: 1053,
   items: [
     {
@@ -10,9 +10,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "展示会で注目の生成AIツール「CXDrive」！来場者の皆様からの熱い質問が続々と...「ROIはどのくらい改善できる？」「導入までの期間は？」",
       target: "マーケティング",
       engagement: {
-        rate: "5.4%",
-        impressions: 5000,
-        distribution_count: 120
+        impression_cnt: 5000,
+        engagement_rate: 5.4,
+        follower_growth_cnt: 120
       },
       expandedContent: {
         fullText: "展示会で話題の生成AIツール「CXDrive」をご紹介！来場者からは「ROIはどのくらい改善できる？」「導入期間は？」など熱い質問が続々。AI活用で業務効率化や新たな価値創出が期待されます。今後の展開にもご注目ください！",
@@ -34,9 +34,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "高校受験を控えた家庭の悩みに、塾/私中の子どものスマートフォン利用にルールを設けるーー。学習塾「明光義塾」を展開する明光ネットワークジャパン（東京都新宿区）が高校進学を希望する中学3年生の…",
       target: "エンジニア",
       engagement: {
-        rate: "4.2%",
-        impressions: 4200,
-        distribution_count: 98
+        impression_cnt: 4200,
+        engagement_rate: 4.2,
+        follower_growth_cnt: 98
       },
       expandedContent: {
         fullText: "高校受験を控えた家庭の悩みに応える明光義塾の取り組み。子どものスマートフォン利用ルールを設けることで、学習効率向上を目指します。受験生の集中力アップと健全な学習環境づくりをサポートしています。",
@@ -58,9 +58,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "参院選（20日投開票）の期日前投票で、有権者が投票所で候補者や政党名の記入を終えた投票用紙を撮影し、X（旧ツイッター）に投稿する事例が相次いでいる。「推し」の候補者や政党の支持を広げる目的が…",
       target: "経営者・役員",
       engagement: {
-        rate: "3.8%",
-        impressions: 3800,
-        distribution_count: 85
+        impression_cnt: 3800,
+        engagement_rate: 3.8,
+        follower_growth_cnt: 85
       },
       expandedContent: {
         fullText: "参院選の期日前投票で投票用紙をSNSに投稿する事例が増加。「推し」候補への支持表明が目的だが、選挙法違反の可能性も。適切な選挙参加と情報発信のバランスについて考える必要があります。",
@@ -82,9 +82,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "AIを活用した業務効率化の最新事例を紹介。DX推進のための具体的なステップを解説します。",
       target: "管理職",
       engagement: {
-        rate: "5.1%",
-        impressions: 5100,
-        distribution_count: 120
+        impression_cnt: 5100,
+        engagement_rate: 5.1,
+        follower_growth_cnt: 120
       },
       expandedContent: {
         fullText: "AI導入による業務効率化の成功事例をもとに、DX推進のためのポイントを解説。現場の課題を洗い出し、段階的にAIを活用することで、組織全体の生産性向上を目指します。",
@@ -106,9 +106,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "エンジニアのための最新リモートワーク事情。キャリアアップに役立つ情報をまとめました。",
       target: "エンジニア",
       engagement: {
-        rate: "4.7%",
-        impressions: 4700,
-        distribution_count: 110
+        impression_cnt: 4700,
+        engagement_rate: 4.7,
+        follower_growth_cnt: 110
       },
       expandedContent: {
         fullText: "エンジニア向けに、リモートワークのメリット・デメリットや、キャリアアップのためのスキル習得法を紹介。実際の現場の声も掲載しています。",
@@ -130,9 +130,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "SNSを活用した新規顧客開拓のコツを解説。営業現場で使える最新テクニックを紹介します。",
       target: "セールス・営業",
       engagement: {
-        rate: "4.0%",
-        impressions: 4000,
-        distribution_count: 105
+        impression_cnt: 4000,
+        engagement_rate: 4.0,
+        follower_growth_cnt: 105
       },
       expandedContent: {
         fullText: "SNSを活用した営業活動の成功事例や、顧客との信頼関係構築のポイントを解説。実践的なノウハウをまとめています。",
@@ -154,9 +154,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "最新のマーケティングトレンドとデータ分析手法を解説。成果につながる施策を紹介します。",
       target: "マーケティング",
       engagement: {
-        rate: "5.5%",
-        impressions: 5500,
-        distribution_count: 130
+        impression_cnt: 5500,
+        engagement_rate: 5.5,
+        follower_growth_cnt: 130
       },
       expandedContent: {
         fullText: "データドリブンなマーケティング戦略の立て方や、最新トレンドの活用事例を紹介。成果を最大化するための分析手法も解説します。",
@@ -178,9 +178,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "人事担当者向け、企業文化を活かした採用・人材育成のポイントを紹介します。",
       target: "人事・採用",
       engagement: {
-        rate: "4.3%",
-        impressions: 4300,
-        distribution_count: 100
+        impression_cnt: 4300,
+        engagement_rate: 4.3,
+        follower_growth_cnt: 100
       },
       expandedContent: {
         fullText: "企業文化を活かした採用活動や、人材育成の成功事例を紹介。現場で役立つ具体的な施策も解説します。",
@@ -202,9 +202,9 @@ export const mockSnsSuggestData: SnsSuggestApiResponse = {
       content: "多様な働き方を実現する副業の始め方と注意点を解説。最新の働き方改革事例も紹介します。",
       target: "その他",
       engagement: {
-        rate: "3.9%",
-        impressions: 3900,
-        distribution_count: 90
+        impression_cnt: 3900,
+        engagement_rate: 3.9,
+        follower_growth_cnt: 90
       },
       expandedContent: {
         fullText: "副業を始める際のポイントや、働き方改革の最新事例を紹介。多様な働き方を実現するためのヒントをまとめています。",

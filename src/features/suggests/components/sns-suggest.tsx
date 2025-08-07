@@ -10,7 +10,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { IconHeartHandshake } from "@tabler/icons-react";
 import { EditDialog } from './edite-dialog'
 import { ImagePopup } from './image-popup'
 import { DeletePopup } from './delete-popup'

@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   const apiTarget = process.env.VITE_API_TARGET || 'http://localhost:8090'
   
   return {
@@ -32,14 +32,14 @@ export default defineConfig(({ mode }) => {
         target: apiTarget,
         changeOrigin: true,
         secure: false,
-        configure: (proxy, options) => {
-          proxy.on('error', (err, req, res) => {
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
             console.log('proxy error', err);
           });
-          proxy.on('proxyReq', (proxyReq, req, res) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
             console.log('Sending Request to the Target:', req.method, req.url);
           });
-          proxy.on('proxyRes', (proxyRes, req, res) => {
+          proxy.on('proxyRes', (proxyRes, req) => {
             console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
           });
         },
