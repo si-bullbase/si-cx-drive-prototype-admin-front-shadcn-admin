@@ -70,7 +70,7 @@ export default function Dashboard() {
               <SnsSuggestRankingCard data={data.snsSuggestRanking} />
             </div>
             {/* 参加人数 */}
-            <div className='grid grid-cols-1 gap-4 lg:grid-cols-3'>
+            <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
               <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
                 <CardContent className='h-40 py-4 flex flex-col items-center justify-between'>
                   <IconHeartHandshake className='w-6 h-6' />
@@ -86,13 +86,7 @@ export default function Dashboard() {
                   <div className='text-sm'>{data.snsSuggestCount.name}</div>
                 </CardContent>
               </Card>
-              <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
-                <CardContent className='h-40 py-4 flex flex-col items-center justify-between'>
-                  <IconHeartHandshake className='w-6 h-6' />
-                  <div className='text-6xl font-bold' style={{ color: '#06C42C' }}>{data.hoge.value.toLocaleString()}</div>
-                  <div className='text-sm'>{data.hoge.name}</div>
-                </CardContent>
-              </Card>
+
             </div>
             {/* ランキング */}
             <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#06C42C' }}>
