@@ -15,20 +15,20 @@ function transformApiItemToSnsSuggestItem(apiItem: ApiSnsSuggestItem): SnsSugges
     content: apiItem.content,
     target: targetMap[apiItem.target] || apiItem.target,
     engagement: {
-      rate: `${(apiItem.engagement.engagement_rate * 100).toFixed(1)}%`,
-      impressions: apiItem.engagement.impression_cnt,
-      distribution_count: apiItem.engagement.reach_cnt || apiItem.engagement.impression_cnt
+      rate: `${((apiItem.engagement.engagement_rate ?? 0) * 100).toFixed(1)}%`,
+      impressions: apiItem.engagement.impression_cnt || 0,
+      distribution_count: apiItem.engagement.reach_cnt || apiItem.engagement.impression_cnt || 0
     },
     expandedContent: {
       fullText: apiItem.content,
       reasoning: apiItem.intent,
       metrics: {
-        participants: Math.floor(apiItem.engagement.impression_cnt * 0.01),
-        comments: Math.floor(apiItem.engagement.impression_cnt * 0.005),
-        shares: apiItem.engagement.repost_cnt || Math.floor(apiItem.engagement.impression_cnt * 0.002),
-        saves: Math.floor(apiItem.engagement.impression_cnt * (apiItem.engagement.save_rate || 0.001)),
-        clicks: Math.floor(apiItem.engagement.impression_cnt * (apiItem.engagement.click_rate || 0.01)),
-        follows: apiItem.engagement.follower_growth_cnt
+        participants: Math.floor((apiItem.engagement.impression_cnt || 0) * 0.01),
+        comments: Math.floor((apiItem.engagement.impression_cnt || 0) * 0.005),
+        shares: apiItem.engagement.repost_cnt || Math.floor((apiItem.engagement.impression_cnt || 0) * 0.002),
+        saves: Math.floor((apiItem.engagement.impression_cnt || 0) * (apiItem.engagement.save_rate || 0.001)),
+        clicks: Math.floor((apiItem.engagement.impression_cnt || 0) * (apiItem.engagement.click_rate || 0.01)),
+        follows: apiItem.engagement.follower_growth_cnt || 0
       }
     }
   }
