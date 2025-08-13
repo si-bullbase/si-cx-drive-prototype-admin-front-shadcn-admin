@@ -6,7 +6,7 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 
 // https://vite.dev/config/
 export default defineConfig(() => {
-  const apiTarget = process.env.VITE_API_TARGET || 'http://localhost:8090'
+  const apiTarget = process.env.VITE_API_TARGET || 'https://localhost:8090'
   
   return {
   plugins: [
@@ -32,6 +32,7 @@ export default defineConfig(() => {
         target: apiTarget,
         changeOrigin: true,
         secure: false,
+        rejectUnauthorized: false,
         configure: (proxy) => {
           proxy.on('error', (err) => {
             console.log('proxy error', err);
