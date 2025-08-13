@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_authenticated')({
       await authApi.getCurrentUser()
     } catch (error) {
       throw redirect({
-        to: '/(auth)/sign-in',
+        to: '/sign-in',
         search: {
           redirect: location.href,
         },

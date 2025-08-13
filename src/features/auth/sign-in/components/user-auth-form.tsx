@@ -61,7 +61,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       
       // リダイレクト先がある場合はそちらに、なければホームに遷移
       const redirectTo = search?.redirect || '/'
-      navigate({ to: redirectTo })
+      // 安全のため外部URLへのリダイレクトを防ぐ
+      if (redirectTo.startsWith('/')) {
+        navigate({ to: redirectTo })
+      } else {
+        navigate({ to: '/' })
+      }
     } catch (error: any) {
       if (error.message === 'Unauthorized') {
         setError('メールアドレスまたはパスワードが正しくありません')
