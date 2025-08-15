@@ -36,28 +36,31 @@ export function SnsSuggestRankingCard({ data }: Props) {
           <span className="text-xs text-gray-400">00:00 更新</span>
         </CardHeader>
         <CardContent className="space-y-3 pt-0">
-          {data.items.map((item, index) => (
+          {(data?.items || data || []).map((item, index) => (
             <div key={item.id} className="flex items-center bg-gray-50 rounded-lg p-3">
               <div className="flex flex-col items-center mr-3 min-w-[2.5rem]">
                 <span className="text-green-600 font-bold text-lg">{index + 1}位</span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2 mb-1">
-                  <div className="text-sm font-medium text-gray-900 line-clamp-2 flex-1 truncate">{item.content}</div>
+                  <div className="text-sm font-medium text-gray-900 line-clamp-3 flex-1">{item.content}</div>
 
-                  <Badge className="bg-green-500 text-white text-xs font-bold px-2 py-0.5">
-                    開封率：{item.engagement.rate}
+                  <Badge className="bg-green-500 text-white text-xs font-bold px-2 py-0.5 hidden sm:inline-flex">
+                    開封率：{item.engagement?.rate || 'N/A'}
                   </Badge>
                 </div>
               </div>
-                <SendConfirmDialog onConfirm={() => handleSendConfirm(item.id)}>
-                  <button className="ml-3 p-2 rounded-full border border-green-200 hover:bg-green-50 transition">
-                    <IconSend size={20} className="text-green-500" />
-                  </button>
-                </SendConfirmDialog>
+                <div className="hidden sm:block">
+                  <SendConfirmDialog onConfirm={() => handleSendConfirm(item.id)}>
+                    <button className="ml-3 p-2 rounded-full border border-green-200 hover:bg-green-50 transition">
+                      <IconSend size={20} className="text-green-500" />
+                    </button>
+                  </SendConfirmDialog>
+                </div>
             </div>
           ))}
         </CardContent>
+        
       </Card>
       
       <ImagePopup 

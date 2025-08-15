@@ -64,7 +64,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
     <>
     <Collapsible open={open} onOpenChange={setOpen} className="py-0">
         <Card>
-          <div className={`grid grid-cols-[4%_36%_12%_20%_16%_20%] items-center ${open ? ' border-b' : ''}`}>
+          <div className={`grid grid-cols-[4%_36%_12%_24%_20%_4%] items-center px-0.5 ${open ? ' border-b' : ''}`}>
             {/* SNSアイコン */}
             <div className="flex justify-center">
               <img src={platformIcon} alt={item.platform} width="24" />
@@ -89,9 +89,9 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
             {/* 予測エンゲージメント */}
             <div>
               <ul className="pl-2 space-y-1">
-                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>エンゲージメント率 {item.engagement.rate}</li>
-                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>インプレッション数 {(item.engagement.impressions || 0).toLocaleString()}</li>
-                <li className="py-0.5"><span className="text-green-500 font-bold">・</span>配信対象数 {item.engagement.distribution_count || 0}</li>
+                <li className="py-0.5 whitespace-nowrap"><span className="text-green-500 font-bold">・</span>エンゲージメント率 {item.engagement.rate}</li>
+                <li className="py-0.5 whitespace-nowrap"><span className="text-green-500 font-bold">・</span>インプレッション数 {(item.engagement.impressions || 0).toLocaleString()}</li>
+                <li className="py-0.5 whitespace-nowrap"><span className="text-green-500 font-bold">・</span>配信対象数 {item.engagement.distribution_count || 0}</li>
               </ul>
             </div>
             {/* アクション */}
@@ -169,7 +169,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.participants || 0}人
                           </div>
-                          <div className='text-sm'>エンゲージメント率</div>
+                          <div className='text-sm whitespace-nowrap'>エンゲージメント率</div>
                         </CardContent>
                       </Card>
                       <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
@@ -178,7 +178,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                              <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.comments || 0}
                           </div>
-                          <div className='text-sm'>インプレッション数</div>
+                          <div className='text-xs whitespace-nowrap'>インプレッション数</div>
                         </CardContent>
                       </Card>
                       <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
@@ -187,8 +187,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.shares || 0}
                           </div>
-                          <div className='text-sm'>配信対象数
-                          </div>
+                          <div className='text-sm whitespace-nowrap'>配信対象数</div>
                         </CardContent>
                       </Card>
                       <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
@@ -197,7 +196,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.saves || 0}
                           </div>
-                          <div className='text-sm'>CV率</div>
+                          <div className='text-sm whitespace-nowrap'>CV率</div>
                         </CardContent>
                       </Card>
                       <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
@@ -206,7 +205,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.clicks || 0}
                           </div>
-                          <div className='text-sm'>クリック数</div>
+                          <div className='text-sm whitespace-nowrap'>クリック数</div>
                         </CardContent>
                       </Card>
                       <Card className='col-span-1 lg:col-span-1 border-0 shadow-none' style={{ backgroundColor: '#CDF3D5' }}>
@@ -215,7 +214,7 @@ function SnsSuggestCard({ item }: SnsSuggestProps) {
                           <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
                             {item.expandedContent?.metrics.follows || 0}
                           </div>
-                          <div className='text-sm'>既読率</div>
+                          <div className='text-sm whitespace-nowrap'>既読率</div>
                         </CardContent>
                       </Card>
                     </div>                  
