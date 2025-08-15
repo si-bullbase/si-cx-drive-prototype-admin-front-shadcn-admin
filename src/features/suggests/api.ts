@@ -36,23 +36,41 @@ function transformApiItemToSnsSuggestItem(apiItem: ApiSnsSuggestItem): SnsSugges
 
 export async function fetchPosts(): Promise<SnsSuggestItem[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/posts/`)
+    const url = `${API_BASE_URL}/posts/`
+    console.log('🔍 SNS Suggest - Fetching posts from:', url)
+    console.log('🔍 SNS Suggest - API_BASE_URL:', API_BASE_URL)
+    console.log('🔍 SNS Suggest - Environment check:', {
+      VITE_API_TARGET: import.meta.env.VITE_API_TARGET,
+      NODE_ENV: import.meta.env.NODE_ENV,
+      MODE: import.meta.env.MODE
+    })
+    
+    const response = await fetch(url)
+    
+    console.log('🔍 SNS Suggest - Response status:', response.status)
+    console.log('🔍 SNS Suggest - Response headers:', Object.fromEntries(response.headers.entries()))
+    console.log('🔍 SNS Suggest - Response URL:', response.url)
     
     if (!response.ok) {
-      throw new Error(`Failed to fetch posts: ${response.status}`)
+      const errorText = await response.text()
+      console.error('🚨 SNS Suggest - Error response body:', errorText)
+      throw new Error(`Failed to fetch posts: ${response.status} - ${errorText}`)
     }
     
     const text = await response.text()
+    console.log('🔍 SNS Suggest - Response text (first 200 chars):', text.substring(0, 200))
     
     // Check if response is HTML (indicating an error page)
     if (text.trim().startsWith('<!')) {
+      console.error('🚨 SNS Suggest - Received HTML instead of JSON:', text.substring(0, 500))
       throw new Error('API returned HTML instead of JSON')
     }
     
     const data: SnsSuggestApiResponse = JSON.parse(text)
+    console.log('✅ SNS Suggest - Successfully parsed JSON data:', data)
     return data.items.map(transformApiItemToSnsSuggestItem)
   } catch (error) {
-    console.error('API fetch failed, using mock data:', error)
+    console.error('🚨 SNS Suggest - API fetch failed, using mock data:', error)
     // Import mock data dynamically to avoid circular dependencies
     const { mockSnsSuggestData } = await import('./mock-data')
     return mockSnsSuggestData.items

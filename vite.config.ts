@@ -9,6 +9,13 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const apiTarget = process.env.VITE_API_TARGET || env.VITE_API_TARGET 
   
+  console.log('🔧 Vite Config - Mode:', mode)
+  console.log('🔧 Vite Config - Environment variables loaded:', {
+    'process.env.VITE_API_TARGET': process.env.VITE_API_TARGET,
+    'env.VITE_API_TARGET': env.VITE_API_TARGET,
+    'final apiTarget': apiTarget
+  })
+  
   return {
   define: {
     'process.env.VITE_API_TARGET': JSON.stringify(apiTarget),
@@ -39,13 +46,22 @@ export default defineConfig(({ mode }) => {
         rejectUnauthorized: false,
         configure: (proxy) => {
           proxy.on('error', (err) => {
-            console.log('proxy error', err);
+            console.error('🚨 Proxy Error:', err);
           });
-          proxy.on('proxyReq', (_, req) => {
-            console.log('Sending Request to the Target:', req.method, req.url);
+          proxy.on('proxyReq', (proxyReq, req) => {
+            console.log('🔄 Proxy Request - Sending to target:', {
+              method: req.method,
+              url: req.url,
+              target: apiTarget,
+              headers: proxyReq.getHeaders()
+            });
           });
           proxy.on('proxyRes', (proxyRes, req) => {
-            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+            console.log('🔄 Proxy Response - Received from target:', {
+              status: proxyRes.statusCode,
+              url: req.url,
+              headers: proxyRes.headers
+            });
           });
         },
       },

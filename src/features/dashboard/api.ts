@@ -15,13 +15,22 @@ export async function fetchDashboardSummary(): Promise<DashboardData> {
   }
 
   try {
-    console.log('Fetching dashboard summary from:', `${API_BASE_URL}/dashboard/summary/`)
+    const url = `${API_BASE_URL}/dashboard/summary`
+    console.log('🔍 Dashboard - Fetching dashboard summary from:', url)
+    console.log('🔍 Dashboard - API_BASE_URL:', API_BASE_URL)
+    console.log('🔍 Dashboard - Environment check:', {
+      VITE_API_TARGET: import.meta.env.VITE_API_TARGET,
+      NODE_ENV: import.meta.env.NODE_ENV,
+      MODE: import.meta.env.MODE,
+      USE_MOCK_DATA,
+      VITE_FORCE_API: import.meta.env.VITE_FORCE_API
+    })
     
     // Check if we're in development and API server might not be running
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout for faster fallback
     
-    const response = await fetch(`${API_BASE_URL}/dashboard/summary`, {
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -34,17 +43,34 @@ export async function fetchDashboardSummary(): Promise<DashboardData> {
     
     clearTimeout(timeoutId)
     
-    console.log('Response status:', response.status)
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+    console.log('🔍 Dashboard - Response status:', response.status)
+    console.log('🔍 Dashboard - Response headers:', Object.fromEntries(response.headers.entries()))
+    console.log('🔍 Dashboard - Response URL:', response.url)
     
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Error response body:', errorText)
+      console.error('🚨 Dashboard - Error response body:', errorText)
+      
+      // Check if response is HTML (indicating an error page)
+      if (errorText.trim().startsWith('<!')) {
+        console.error('🚨 Dashboard - Received HTML instead of JSON:', errorText.substring(0, 500))
+        throw new Error('API returned HTML instead of JSON')
+      }
+      
       throw new Error(`API request failed: ${response.status} - ${errorText}`)
     }
     
-    const data: DashboardData = await response.json()
-    console.log('Dashboard data received:', data)
+    const text = await response.text()
+    console.log('🔍 Dashboard - Response text (first 200 chars):', text.substring(0, 200))
+    
+    // Check if response is HTML (indicating an error page)
+    if (text.trim().startsWith('<!')) {
+      console.error('🚨 Dashboard - Received HTML instead of JSON:', text.substring(0, 500))
+      throw new Error('API returned HTML instead of JSON')
+    }
+    
+    const data: DashboardData = JSON.parse(text)
+    console.log('✅ Dashboard - Successfully parsed JSON data:', data)
     return data
   } catch (error) {
     // Handle different types of network errors with more specific messages

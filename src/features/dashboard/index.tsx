@@ -23,7 +23,7 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardData>(mockDashboardData)
   const [loading, setLoading] = useState(true)
 
- console.log(data)
+  
 
   useEffect(() => {
     const loadDashboardData = async () => {
