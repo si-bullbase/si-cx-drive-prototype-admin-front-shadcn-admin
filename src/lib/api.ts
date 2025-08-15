@@ -8,7 +8,12 @@ export const apiClient = {
     options: RequestInit = {},
     skipRefresh = false
   ): Promise<T> {
-    const url = endpoint.startsWith('http') ? endpoint : `/api${endpoint}`
+    // Use absolute URL in production, relative in development
+    const baseUrl = import.meta.env.MODE === 'production' 
+      ? `${import.meta.env.VITE_API_TARGET}/api`
+      : '/api'
+    
+    const url = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`
     
     const config: RequestInit = {
       credentials: 'include',
@@ -70,7 +75,12 @@ export const apiClient = {
 
   async executeRefresh(): Promise<boolean> {
     try {
-      const response = await fetch('/api/refresh', {
+      // Use absolute URL in production, relative in development
+      const baseUrl = import.meta.env.MODE === 'production' 
+        ? `${import.meta.env.VITE_API_TARGET}/api`
+        : '/api'
+      
+      const response = await fetch(`${baseUrl}/refresh`, {
         method: 'POST',
         credentials: 'include',
       })
@@ -91,8 +101,13 @@ export const apiClient = {
   async handleAuthFailure(): Promise<void> {
     // 認証失敗時の処理（ログアウトとリダイレクト）
     try {
+      // Use absolute URL in production, relative in development
+      const baseUrl = import.meta.env.MODE === 'production' 
+        ? `${import.meta.env.VITE_API_TARGET}/api`
+        : '/api'
+      
       // サーバー側のセッションクリア
-      await fetch('/api/logout', {
+      await fetch(`${baseUrl}/logout`, {
         method: 'POST',
         credentials: 'include',
       }).catch(() => {

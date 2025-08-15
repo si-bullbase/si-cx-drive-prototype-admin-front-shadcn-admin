@@ -1,6 +1,9 @@
 import type { SnsSuggestItem, SnsSuggestApiResponse, ApiSnsSuggestItem } from './types'
 
-const API_BASE_URL = '/api'
+// Use absolute URL in production, relative in development
+const API_BASE_URL = import.meta.env.MODE === 'production' 
+  ? `${import.meta.env.VITE_API_TARGET}/api`
+  : '/api'
 
 function transformApiItemToSnsSuggestItem(apiItem: ApiSnsSuggestItem): SnsSuggestItem {
   const targetMap: Record<string, string> = {

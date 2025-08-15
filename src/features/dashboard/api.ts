@@ -1,7 +1,10 @@
 import type { DashboardData } from './types'
 import { mockDashboardData } from './mock-data'
 
-const API_BASE_URL = '/api' 
+// Use absolute URL in production, relative in development
+const API_BASE_URL = import.meta.env.MODE === 'production' 
+  ? `${import.meta.env.VITE_API_TARGET}/api`
+  : '/api' 
 
 // Check if we should use mock data instead of API
 const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
