@@ -72,6 +72,11 @@ export const mockDashboardData: DashboardData = {
     value: 1234
   },
   
+  answersCount: {
+    name: "回答数",
+    value: 987
+  },
+  
   snsSuggestCount: {
     name: "SNSサジェスト候補",
     value: 156
