@@ -10,7 +10,7 @@ import {
 import type { BoothJobCrossItem, CrossAnalysisItem } from '../types'
 
 const jobTypeLabels = {
-  executiveOfficer: '役員',
+  executiveOfficer: '経営者・役員',
   manager: '管理職',
   engineer: 'エンジニア',
   salesStaff: '営業',
@@ -48,6 +48,33 @@ const CustomLegend = (props: any) => {
         </div>
       ))}
     </div>
+  );
+};
+
+const CustomTick = (props: any) => {
+  const { x, y, payload } = props;
+  const text = payload.value;
+  const lines = [];
+  
+  for (let i = 0; i < text.length; i += 4) {
+    lines.push(text.slice(i, i + 4));
+  }
+  
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {lines.map((line, index) => (
+        <text 
+          key={index}
+          x={0} 
+          y={index * 14 + 8}
+          textAnchor="middle" 
+          fill="#666"
+          fontSize="12"
+        >
+          {line}
+        </text>
+      ))}
+    </g>
   );
 };
 
@@ -99,60 +126,67 @@ export function StackedBarChart({ data }: StackedBarChartProps) {
   const legendData = 'executiveOfficer' in data[0] ? 
     Object.keys(jobTypeLabels).map(key => ({
       value: jobTypeLabels[key as keyof typeof jobTypeLabels],
-      color: key === 'others' ? '#15803d' : 
-             key === 'recruitment' ? '#16a34a' :
-             key === 'marketing' ? '#22c55e' :
-             key === 'salesStaff' ? '#4ade80' :
-             key === 'engineer' ? '#86efac' :
-             key === 'manager' ? '#bbf7d0' : '#dcfce7'
+      color: key === 'others' ? '#CC79A7' : 
+             key === 'recruitment' ? '#0072B2' :
+             key === 'marketing' ? '#56B4E9' :
+             key === 'salesStaff' ? '#4E79A7' :
+             key === 'engineer' ? '#009E73' :
+             key === 'manager' ? '#E69F00' : 
+             key === 'executiveOfficer' ? '#D55E00' : '#dcfce7'
     })) :
     Object.keys(purposeLabels).map(key => ({
       value: purposeLabels[key as keyof typeof purposeLabels],
-      color: key === 'others' ? '#15803d' :
-             key === 'purpose7' ? '#16a34a' :
-             key === 'purpose6' ? '#22c55e' :
-             key === 'purpose5' ? '#4ade80' :
-             key === 'purpose4' ? '#86efac' :
-             key === 'purpose3' ? '#bbf7d0' :
-             key === 'purpose2' ? '#dcfce7' : '#f0fdf4'
+      color: key === 'purpose1' ? '#D55E00' :
+             key === 'purpose2' ? '#E69F00' :
+             key === 'purpose3' ? '#009E73' :
+             key === 'purpose4' ? '#4E79A7' :
+             key === 'purpose5' ? '#56B4E9' :
+             key === 'purpose6' ? '#0072B2' :
+             key === 'purpose7' ? '#CC79A7' :
+             key === 'others' ? '#8B8B8B' : '#f0fdf4'
     }));
 
   return (
     <div>
       <CustomLegend payload={legendData} />
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={500}>
       <BarChart 
         data={data} 
-        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+        margin={{ top: 20, right: 30, left: 0, bottom: 30 }}
         barSize={40}
         barGap={2}
       >
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="name" />
+        <XAxis 
+          dataKey="name" 
+          tick={<CustomTick />}
+          interval={0}
+          minTickGap={1}
+        />
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
         {/* ブース×職種クロス */}
         {'executiveOfficer' in data[0] ? (
           <>
-            <Bar dataKey="others" stackId="a" fill="#15803d" name={jobTypeLabels.others}/>
-            <Bar dataKey="recruitment" stackId="a" fill="#16a34a" name={jobTypeLabels.recruitment}/>
-            <Bar dataKey="marketing" stackId="a" fill="#22c55e" name={jobTypeLabels.marketing}/>
-            <Bar dataKey="salesStaff" stackId="a" fill="#4ade80" name={jobTypeLabels.salesStaff}/>
-            <Bar dataKey="engineer" stackId="a" fill="#86efac" name={jobTypeLabels.engineer}/>
-            <Bar dataKey="manager" stackId="a" fill="#bbf7d0" name={jobTypeLabels.manager}/>
-            <Bar dataKey="executiveOfficer" stackId="a" fill="#dcfce7" name={jobTypeLabels.executiveOfficer}/>
+            <Bar dataKey="executiveOfficer" stackId="a" fill="#D55E00" name={jobTypeLabels.executiveOfficer}/>
+            <Bar dataKey="manager" stackId="a" fill="#E69F00" name={jobTypeLabels.manager}/>
+            <Bar dataKey="engineer" stackId="a" fill="#009E73" name={jobTypeLabels.engineer}/>
+            <Bar dataKey="salesStaff" stackId="a" fill="#4E79A7" name={jobTypeLabels.salesStaff}/>
+            <Bar dataKey="marketing" stackId="a" fill="#56B4E9" name={jobTypeLabels.marketing}/>
+            <Bar dataKey="recruitment" stackId="a" fill="#0072B2" name={jobTypeLabels.recruitment}/>
+            <Bar dataKey="others" stackId="a" fill="#8B8B8B" name={jobTypeLabels.others}/>
           </>
         ) : (
           /* 参加目的クロス分析 */
           <>
-            <Bar dataKey="others" stackId="a" fill="#15803d" name={purposeLabels.others}/>
-            <Bar dataKey="purpose7" stackId="a" fill="#16a34a" name={purposeLabels.purpose7}/>
-            <Bar dataKey="purpose6" stackId="a" fill="#22c55e" name={purposeLabels.purpose6}/>
-            <Bar dataKey="purpose5" stackId="a" fill="#4ade80" name={purposeLabels.purpose5}/>
-            <Bar dataKey="purpose4" stackId="a" fill="#86efac" name={purposeLabels.purpose4}/>
-            <Bar dataKey="purpose3" stackId="a" fill="#bbf7d0" name={purposeLabels.purpose3}/>
-            <Bar dataKey="purpose2" stackId="a" fill="#dcfce7" name={purposeLabels.purpose2}/>
-            <Bar dataKey="purpose1" stackId="a" fill="#f0fdf4" name={purposeLabels.purpose1}/>
+            <Bar dataKey="purpose1" stackId="a" fill="#D55E00" name={purposeLabels.purpose1}/>
+            <Bar dataKey="purpose2" stackId="a" fill="#E69F00" name={purposeLabels.purpose2}/>
+            <Bar dataKey="purpose3" stackId="a" fill="#009E73" name={purposeLabels.purpose3}/>
+            <Bar dataKey="purpose4" stackId="a" fill="#4E79A7" name={purposeLabels.purpose4}/>
+            <Bar dataKey="purpose5" stackId="a" fill="#56B4E9" name={purposeLabels.purpose5}/>
+            <Bar dataKey="purpose6" stackId="a" fill="#0072B2" name={purposeLabels.purpose6}/>
+            <Bar dataKey="purpose7" stackId="a" fill="#CC79A7" name={purposeLabels.purpose7}/>
+            <Bar dataKey="others" stackId="a" fill="#8B8B8B" name={purposeLabels.others}/>
           </>
         )}
       </BarChart>

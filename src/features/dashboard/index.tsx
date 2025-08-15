@@ -23,7 +23,7 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardData>(mockDashboardData)
   const [loading, setLoading] = useState(true)
 
-
+ console.log(data)
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -74,8 +74,8 @@ export default function Dashboard() {
               <Card className='col-span-1 lg:col-span-1' style={{ backgroundColor: '#CDF3D5' }}>
                 <CardContent className='h-40 py-4 flex flex-col items-center justify-between'>
                   <IconHeartHandshake className='w-6 h-6' />
-                  <div className='text-6xl font-bold' style={{ color: '#06C42C' }}>{data.participants.value.toLocaleString()}人</div>
-                  <div className='text-sm'>{data.participants.name}</div>
+                  <div className='text-6xl font-bold' style={{ color: '#06C42C' }}>{data.answersCount?.value?.toLocaleString() || 0}人</div>
+                  <div className='text-sm'>{data.answersCount?.name || '参加人数'}</div>
                 </CardContent>
               </Card>
 
@@ -95,14 +95,17 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-                {data.exhibitRanking.slice(0, 3).map((item) => (
+                {data.exhibitRanking
+                  .sort((a, b) => b.value - a.value)
+                  .slice(0, 3)
+                  .map((item, index) => (
                   <div
-                    key={item.rank}
+                    key={item.name}
                     className='h-40 py-4 flex flex-col items-center justify-between border rounded-lg'
                     style={{ backgroundColor: '#E6F9EA' }}
                   >
                     <div className='text-4xl font-bold' style={{ color: '#06C42C' }}>
-                      <span className='text-6xl'>{item.rank}</span>
+                      <span className='text-6xl'>{index + 1}</span>
                       <span className='text-2xl'>位</span>
                     </div>
                     <div className='text-4xl font-bold text-center' style={{ color: '#06C42C' }}>{item.name}</div>

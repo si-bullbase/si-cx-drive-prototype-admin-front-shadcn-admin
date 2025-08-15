@@ -57,9 +57,10 @@ export interface CrossAnalysisItem {
 
 export interface DashboardData {
   snsSuggestRanking: SnsSuggestApiResponse
-  participants: StatCard
+  participants?: StatCard
+  answersCount: StatCard
   snsSuggestCount: StatCard
-  hoge: StatCard
+  hoge?: StatCard
   exhibitRanking: RankingItem[]
   jobPie: PieChartItem[]
   industryPie: PieChartItem[]

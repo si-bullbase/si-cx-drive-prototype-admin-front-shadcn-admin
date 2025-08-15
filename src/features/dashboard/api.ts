@@ -1,10 +1,10 @@
 import type { DashboardData } from './types'
 import { mockDashboardData } from './mock-data'
 
-const API_BASE_URL = '/api'
+const API_BASE_URL = '/api' 
 
 // Check if we should use mock data instead of API
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || import.meta.env.DEV
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
 
 export async function fetchDashboardSummary(): Promise<DashboardData> {
   // If mock data is enabled, return mock data immediately
@@ -21,7 +21,7 @@ export async function fetchDashboardSummary(): Promise<DashboardData> {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout for faster fallback
     
-    const response = await fetch(`${API_BASE_URL}/dashboard/summary/`, {
+    const response = await fetch(`${API_BASE_URL}/dashboard/summary`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
